@@ -4,19 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/pgxpool"
-
 	taskdomain "example.com/taskservice/internal/domain/task"
+	"github.com/jackc/pgx/v5"
 )
-
-type Repository struct {
-	pool *pgxpool.Pool
-}
-
-func New(pool *pgxpool.Pool) *Repository {
-	return &Repository{pool: pool}
-}
 
 func (r *Repository) Create(ctx context.Context, task *taskdomain.Task) (*taskdomain.Task, error) {
 	const query = `
@@ -121,30 +111,4 @@ func (r *Repository) List(ctx context.Context) ([]taskdomain.Task, error) {
 	}
 
 	return tasks, nil
-}
-
-type taskScanner interface {
-	Scan(dest ...any) error
-}
-
-func scanTask(scanner taskScanner) (*taskdomain.Task, error) {
-	var (
-		task   taskdomain.Task
-		status string
-	)
-
-	if err := scanner.Scan(
-		&task.ID,
-		&task.Title,
-		&task.Description,
-		&status,
-		&task.CreatedAt,
-		&task.UpdatedAt,
-	); err != nil {
-		return nil, err
-	}
-
-	task.Status = taskdomain.Status(status)
-
-	return &task, nil
 }
