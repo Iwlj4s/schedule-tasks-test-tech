@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"example.com/taskservice/internal/domain/exceptions"
 	taskdomain "example.com/taskservice/internal/domain/task"
 	"github.com/jackc/pgx/v5"
 )
@@ -35,7 +36,7 @@ func (r *Repository) GetByID(ctx context.Context, id int64) (*taskdomain.Task, e
 	found, err := scanTask(row)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, taskdomain.ErrNotFound
+			return nil, exceptions.ErrNotFound
 		}
 
 		return nil, err
@@ -59,7 +60,7 @@ func (r *Repository) Update(ctx context.Context, task *taskdomain.Task) (*taskdo
 	updated, err := scanTask(row)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, taskdomain.ErrNotFound
+			return nil, exceptions.ErrNotFound
 		}
 
 		return nil, err
@@ -77,7 +78,7 @@ func (r *Repository) Delete(ctx context.Context, id int64) error {
 	}
 
 	if result.RowsAffected() == 0 {
-		return taskdomain.ErrNotFound
+		return exceptions.ErrNotFound
 	}
 
 	return nil

@@ -8,7 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 
-	taskdomain "example.com/taskservice/internal/domain/task"
+	exceptions "example.com/taskservice/internal/domain/exceptions"
 	taskusecase "example.com/taskservice/internal/usecase/task"
 )
 
@@ -143,7 +143,7 @@ func decodeJSON(r *http.Request, dst any) error {
 
 func writeUsecaseError(w http.ResponseWriter, err error) {
 	switch {
-	case errors.Is(err, taskdomain.ErrNotFound):
+	case errors.Is(err, exceptions.ErrNotFound):
 		writeError(w, http.StatusNotFound, err)
 	case errors.Is(err, taskusecase.ErrInvalidInput):
 		writeError(w, http.StatusBadRequest, err)
