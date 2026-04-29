@@ -21,7 +21,7 @@ func NewService(repo Repository) *Service {
 	}
 }
 
-func (s *Service) Create(ctx context.Context, input CreateScheduleInput) (*scheduledomain.Schedule, error) {
+func (s *Service) CreateSchedule(ctx context.Context, input CreateScheduleInput) (*scheduledomain.Schedule, error) {
 	normalized, err := validateCreateScheduleInput(input)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (s *Service) Create(ctx context.Context, input CreateScheduleInput) (*sched
 	return created, nil
 }
 
-func (s *Service) Delete(ctx context.Context, id int64) error {
+func (s *Service) DeleteSchedule(ctx context.Context, id int64) error {
 	if id <= 0 {
 		return fmt.Errorf("%w: id must be positive", exceptionsdomain.ErrInvalidInput) // Знаю, что пока этой функции нет
 	}
@@ -56,7 +56,7 @@ func (s *Service) Delete(ctx context.Context, id int64) error {
 	return s.repo.DeleteSchedule(ctx, id)
 }
 
-func (s *Service) GetByID(ctx context.Context, id int64) (*scheduledomain.Schedule, error) {
+func (s *Service) GetScheduleByID(ctx context.Context, id int64) (*scheduledomain.Schedule, error) {
 	if id <= 0 {
 		return nil, fmt.Errorf("%w: id must be positive", exceptionsdomain.ErrInvalidInput)
 	}

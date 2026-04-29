@@ -11,9 +11,9 @@ import (
 
 func (r *Repository) CreateSchedule(ctx context.Context, s *scheduledomain.Schedule) (*scheduledomain.Schedule, error) {
 	const query = `
-		INSERT INTO task_schedules (title, description, status, recurrence_type, recurrence_config, next_run_at, created_at, updated_at)
+		INSERT INTO task_schedules (title, description, status, recurrence_type, recurrence_config, next_run_at, created_at, updated_at)		
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-		RETURNING title, description, status, recurrence_type, recurrence_config, next_run_at, created_at, updated_at
+		RETURNING id, title, description, status, recurrence_type, recurrence_config, next_run_at, created_at, updated_at
 	`
 
 	row := r.pool.QueryRow(

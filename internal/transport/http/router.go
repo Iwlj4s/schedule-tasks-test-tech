@@ -9,7 +9,7 @@ import (
 	httphandlers "example.com/taskservice/internal/transport/http/handlers"
 )
 
-func NewRouter(taskHandler *httphandlers.TaskHandler, docsHandler *swaggerdocs.Handler) *mux.Router {
+func NewRouter(taskHandler *httphandlers.TaskHandler, scheduleHandler *httphandlers.ScheduleHandler, docsHandler *swaggerdocs.Handler) *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
 	router.HandleFunc("/swagger/openapi.json", docsHandler.ServeSpec).Methods(http.MethodGet)
@@ -23,6 +23,11 @@ func NewRouter(taskHandler *httphandlers.TaskHandler, docsHandler *swaggerdocs.H
 	api.HandleFunc("/tasks/{id:[0-9]+}", taskHandler.GetByID).Methods(http.MethodGet)
 	api.HandleFunc("/tasks/{id:[0-9]+}", taskHandler.Update).Methods(http.MethodPut)
 	api.HandleFunc("/tasks/{id:[0-9]+}", taskHandler.Delete).Methods(http.MethodDelete)
+
+	// Schedule api
+	api.HandleFunc("/schedule", scheduleHandler.CreateSchedule).Methods(http.MethodPost)
+	api.HandleFunc("/schedule/{id:[0-9]+}", scheduleHandler.DeleteSchedule).Methods(http.MethodDelete)
+	api.HandleFunc("/schedule/{id:[0-9]+}", scheduleHandler.GetScheduleByID).Methods(http.MethodGet)
 
 	return router
 }

@@ -7,7 +7,7 @@ import (
 
 type Status string
 type RecurrenceType string
-type RecurrenceConfig json.RawMessage
+type RecurrenceConfig = json.RawMessage
 
 const (
 	StatusNew        Status = "new"

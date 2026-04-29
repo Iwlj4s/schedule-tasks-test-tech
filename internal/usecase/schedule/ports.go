@@ -13,6 +13,12 @@ type Repository interface {
 	GetScheduleByID(ctx context.Context, id int64) (*scheduledomain.Schedule, error)
 }
 
+type ScheduleUseCase interface {
+	CreateSchedule(ctx context.Context, input CreateScheduleInput) (*scheduledomain.Schedule, error)
+	DeleteSchedule(ctx context.Context, id int64) error
+	GetScheduleByID(ctx context.Context, id int64) (*scheduledomain.Schedule, error)
+}
+
 type CreateScheduleInput struct {
 	Title            string
 	Description      string
