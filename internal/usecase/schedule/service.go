@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	exceptionsdomain "example.com/taskservice/internal/domain/exceptions"
 	scheduledomain "example.com/taskservice/internal/domain/schedule"
+	exceptions "example.com/taskservice/internal/exceptions"
 )
 
 type Service struct {
@@ -50,7 +50,7 @@ func (s *Service) CreateSchedule(ctx context.Context, input CreateScheduleInput)
 
 func (s *Service) DeleteSchedule(ctx context.Context, id int64) error {
 	if id <= 0 {
-		return fmt.Errorf("%w: id must be positive", exceptionsdomain.ErrInvalidInput) // Знаю, что пока этой функции нет
+		return fmt.Errorf("%w: id must be positive", exceptions.ErrInvalidInput) // Знаю, что пока этой функции нет
 	}
 
 	return s.repo.DeleteSchedule(ctx, id)
@@ -58,7 +58,7 @@ func (s *Service) DeleteSchedule(ctx context.Context, id int64) error {
 
 func (s *Service) GetScheduleByID(ctx context.Context, id int64) (*scheduledomain.Schedule, error) {
 	if id <= 0 {
-		return nil, fmt.Errorf("%w: id must be positive", exceptionsdomain.ErrInvalidInput)
+		return nil, fmt.Errorf("%w: id must be positive", exceptions.ErrInvalidInput)
 	}
 
 	return s.repo.GetScheduleByID(ctx, id)

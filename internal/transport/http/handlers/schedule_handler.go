@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	scheduledomain "example.com/taskservice/internal/domain/schedule"
+	exceptions "example.com/taskservice/internal/exceptions"
+	helpers "example.com/taskservice/internal/helpers"
 	scheduleusecase "example.com/taskservice/internal/usecase/schedule"
 )
 
@@ -17,8 +19,8 @@ func NewScheduleHandler(usecase scheduleusecase.ScheduleUseCase) *ScheduleHandle
 
 func (h *ScheduleHandler) CreateSchedule(w http.ResponseWriter, r *http.Request) {
 	var req scheduleMutationDTO
-	if err := decodeJSON(r, &req); err != nil {
-		writeError(w, http.StatusBadRequest, err)
+	if err := helpers.DecodeJSON(r, &req); err != nil {
+		exceptions.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
@@ -32,22 +34,22 @@ func (h *ScheduleHandler) CreateSchedule(w http.ResponseWriter, r *http.Request)
 	})
 
 	if err != nil {
-		writeUsecaseError(w, err)
+		exceptions.WriteUsecaseError(w, err)
 		return
 	}
 
-	writeJSON(w, http.StatusCreated, newScheduleDTO(created))
+	helpers.WriteJSON(w, http.StatusCreated, newScheduleDTO(created))
 }
 
 func (h *ScheduleHandler) DeleteSchedule(w http.ResponseWriter, r *http.Request) {
 	id, err := getIDFromRequest(r)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, err)
+		exceptions.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 
 	if err := h.usecase.DeleteSchedule(r.Context(), id); err != nil {
-		writeUsecaseError(w, err)
+		exceptions.WriteUsecaseError(w, err)
 		return
 	}
 
@@ -57,14 +59,14 @@ func (h *ScheduleHandler) DeleteSchedule(w http.ResponseWriter, r *http.Request)
 func (h *ScheduleHandler) GetScheduleByID(w http.ResponseWriter, r *http.Request) {
 	id, err := getIDFromRequest(r)
 	if err != nil {
-		writeError(w, http.StatusBadRequest, err)
+		exceptions.WriteError(w, http.StatusBadRequest, err)
 		return
 	}
 	schedule, err := h.usecase.GetScheduleByID(r.Context(), id)
 	if err != nil {
-		writeUsecaseError(w, err)
+		exceptions.WriteUsecaseError(w, err)
 		return
 	}
 
-	writeJSON(w, http.StatusOK, newScheduleDTO(schedule))
+	helpers.WriteJSON(w, http.StatusOK, newScheduleDTO(schedule))
 }

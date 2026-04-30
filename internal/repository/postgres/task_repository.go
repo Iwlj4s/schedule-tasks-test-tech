@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"example.com/taskservice/internal/domain/exceptions"
 	taskdomain "example.com/taskservice/internal/domain/task"
+	exceptions "example.com/taskservice/internal/exceptions"
 	"github.com/jackc/pgx/v5"
 )
 
